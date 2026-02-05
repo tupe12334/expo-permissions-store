@@ -1,44 +1,157 @@
 import { describe, it, expect } from "vitest";
-
-// NOTE: These tests are skipped because they require React Native environment.
-// The handlers use require() for Metro bundler compatibility, which vitest
-// doesn't mock properly. The functionality is tested in the actual RN app.
+import { normalizeResponse, type PermissionResponse } from "./handlers";
 
 describe("handlers", () => {
-  describe("getPermission", () => {
-    it.todo("should get camera permission - requires RN environment");
-    it.todo("should get microphone permission - requires RN environment");
-    it.todo("should get media library permission - requires RN environment");
-    it.todo(
-      "should get foreground location permission - requires RN environment"
-    );
-    it.todo(
-      "should get background location permission - requires RN environment"
-    );
-    it.todo("should get notifications permission - requires RN environment");
-    it.todo("should get contacts permission - requires RN environment");
-    it.todo("should get calendar permission - requires RN environment");
-    it.todo("should get tracking permission - requires RN environment");
-  });
+  describe("normalizeResponse", () => {
+    it("should normalize granted status", () => {
+      const response: PermissionResponse = {
+        status: "granted",
+        canAskAgain: true,
+        expires: "never",
+      };
 
-  describe("requestPermission", () => {
-    it.todo("should request camera permission - requires RN environment");
-    it.todo("should request microphone permission - requires RN environment");
-    it.todo(
-      "should request media library permission - requires RN environment"
-    );
-    it.todo(
-      "should request foreground location permission - requires RN environment"
-    );
-    it.todo(
-      "should request background location permission - requires RN environment"
-    );
-    it.todo(
-      "should request notifications permission - requires RN environment"
-    );
-    it.todo("should request contacts permission - requires RN environment");
-    it.todo("should request calendar permission - requires RN environment");
-    it.todo("should request tracking permission - requires RN environment");
+      const result = normalizeResponse(response);
+
+      expect(result).toEqual({
+        status: "granted",
+        canAskAgain: true,
+        expires: "never",
+      });
+    });
+
+    it("should normalize denied status", () => {
+      const response: PermissionResponse = {
+        status: "denied",
+        canAskAgain: false,
+        expires: "never",
+      };
+
+      const result = normalizeResponse(response);
+
+      expect(result).toEqual({
+        status: "denied",
+        canAskAgain: false,
+        expires: "never",
+      });
+    });
+
+    it("should normalize limited status", () => {
+      const response: PermissionResponse = {
+        status: "limited",
+        canAskAgain: true,
+        expires: "never",
+      };
+
+      const result = normalizeResponse(response);
+
+      expect(result).toEqual({
+        status: "limited",
+        canAskAgain: true,
+        expires: "never",
+      });
+    });
+
+    it("should normalize undetermined status", () => {
+      const response: PermissionResponse = {
+        status: "undetermined",
+        canAskAgain: true,
+        expires: "never",
+      };
+
+      const result = normalizeResponse(response);
+
+      expect(result.status).toBe("undetermined");
+    });
+
+    it("should normalize unknown status to undetermined", () => {
+      const response: PermissionResponse = {
+        status: "unknown_status",
+        canAskAgain: true,
+        expires: "never",
+      };
+
+      const result = normalizeResponse(response);
+
+      expect(result.status).toBe("undetermined");
+    });
+
+    it("should default canAskAgain to true when not provided", () => {
+      const response: PermissionResponse = {
+        status: "granted",
+        expires: "never",
+      };
+
+      const result = normalizeResponse(response);
+
+      expect(result.canAskAgain).toBe(true);
+    });
+
+    it("should preserve canAskAgain false value", () => {
+      const response: PermissionResponse = {
+        status: "denied",
+        canAskAgain: false,
+        expires: "never",
+      };
+
+      const result = normalizeResponse(response);
+
+      expect(result.canAskAgain).toBe(false);
+    });
+
+    it("should default expires to never when not provided", () => {
+      const response: PermissionResponse = {
+        status: "granted",
+        canAskAgain: true,
+      };
+
+      const result = normalizeResponse(response);
+
+      expect(result.expires).toBe("never");
+    });
+
+    it("should handle numeric expires value", () => {
+      const response: PermissionResponse = {
+        status: "granted",
+        canAskAgain: true,
+        expires: 1234567890,
+      };
+
+      const result = normalizeResponse(response);
+
+      expect(result.expires).toBe(1234567890);
+    });
+
+    it("should ignore granted field from response", () => {
+      const response: PermissionResponse = {
+        status: "granted",
+        canAskAgain: true,
+        expires: "never",
+        granted: true,
+      };
+
+      const result = normalizeResponse(response);
+
+      expect(result).not.toHaveProperty("granted");
+      expect(result).toEqual({
+        status: "granted",
+        canAskAgain: true,
+        expires: "never",
+      });
+    });
+
+    it("should handle minimal response with only status", () => {
+      const response: PermissionResponse = {
+        status: "granted",
+      };
+
+      const result = normalizeResponse(response);
+
+      expect(result).toEqual({
+        status: "granted",
+        canAskAgain: true,
+        expires: "never",
+      });
+    });
   });
 
   describe("module structure", () => {
@@ -51,5 +164,14 @@ describe("handlers", () => {
       const { requestPermission } = await import("./handlers");
       expect(typeof requestPermission).toBe("function");
     });
+
+    it("should export normalizeResponse function", async () => {
+      const { normalizeResponse } = await import("./handlers");
+      expect(typeof normalizeResponse).toBe("function");
+    });
   });
+
+  // NOTE: getPermission and requestPermission functions require React Native environment
+  // with actual expo modules. They are tested indirectly through createApi.test.ts
+  // which mocks the handlers module.
 });

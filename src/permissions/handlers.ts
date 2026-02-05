@@ -1,13 +1,15 @@
 import type { PermissionState, PermissionType } from "../types";
 
-type PermissionResponse = {
+export type PermissionResponse = {
   status: string;
   canAskAgain?: boolean;
   expires?: "never" | number;
   granted?: boolean;
 };
 
-function normalizeResponse(response: PermissionResponse): PermissionState {
+export function normalizeResponse(
+  response: PermissionResponse
+): PermissionState {
   const status = response.status as PermissionState["status"];
   return {
     status:

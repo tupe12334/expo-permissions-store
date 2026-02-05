@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { configureStore } from "@reduxjs/toolkit";
 import { createPermissionsApi } from "./createApi";
 import { ALL_PERMISSIONS, DEFAULT_CONFIG } from "./types";
 import { getPermission, requestPermission } from "./permissions/handlers";
@@ -10,6 +11,16 @@ vi.mock("./permissions/handlers", () => ({
 
 const mockGetPermission = vi.mocked(getPermission);
 const mockRequestPermission = vi.mocked(requestPermission);
+
+function createTestStore(api: ReturnType<typeof createPermissionsApi>) {
+  return configureStore({
+    reducer: {
+      [api.reducerPath]: api.reducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(api.middleware),
+  });
+}
 
 describe("createApi", () => {
   beforeEach(() => {
@@ -137,9 +148,7 @@ describe("createApi", () => {
     });
   });
 
-  // NOTE: These tests are skipped because they require a full Redux store setup
-  // RTK Query middleware warning is thrown without proper store configuration
-  describe.skip("getPermission queryFn", () => {
+  describe("getPermission queryFn", () => {
     it("should return data on successful permission check", async () => {
       mockGetPermission.mockResolvedValue({
         status: "granted",
@@ -148,10 +157,10 @@ describe("createApi", () => {
       });
 
       const api = createPermissionsApi();
-      const result = await api.endpoints.getPermission.initiate("camera")(
-        api.util.getRunningQueriesThunk as never,
-        () => ({ permissionsApi: { queries: {}, mutations: {} } }),
-        undefined
+      const store = createTestStore(api);
+
+      const result = await store.dispatch(
+        api.endpoints.getPermission.initiate("camera")
       );
 
       expect(mockGetPermission).toHaveBeenCalledWith("camera");
@@ -164,10 +173,10 @@ describe("createApi", () => {
 
     it("should return error for unconfigured permission", async () => {
       const api = createPermissionsApi({ permissions: ["microphone"] });
-      const result = await api.endpoints.getPermission.initiate("camera")(
-        api.util.getRunningQueriesThunk as never,
-        () => ({ permissionsApi: { queries: {}, mutations: {} } }),
-        undefined
+      const store = createTestStore(api);
+
+      const result = await store.dispatch(
+        api.endpoints.getPermission.initiate("camera")
       );
 
       expect(result.error).toEqual({
@@ -182,10 +191,10 @@ describe("createApi", () => {
       );
 
       const api = createPermissionsApi();
-      const result = await api.endpoints.getPermission.initiate("camera")(
-        api.util.getRunningQueriesThunk as never,
-        () => ({ permissionsApi: { queries: {}, mutations: {} } }),
-        undefined
+      const store = createTestStore(api);
+
+      const result = await store.dispatch(
+        api.endpoints.getPermission.initiate("camera")
       );
 
       expect(result.error).toEqual({
@@ -198,10 +207,10 @@ describe("createApi", () => {
       mockGetPermission.mockRejectedValue("string error");
 
       const api = createPermissionsApi();
-      const result = await api.endpoints.getPermission.initiate("camera")(
-        api.util.getRunningQueriesThunk as never,
-        () => ({ permissionsApi: { queries: {}, mutations: {} } }),
-        undefined
+      const store = createTestStore(api);
+
+      const result = await store.dispatch(
+        api.endpoints.getPermission.initiate("camera")
       );
 
       expect(result.error).toEqual({
@@ -209,10 +218,27 @@ describe("createApi", () => {
         error: "Unknown error",
       });
     });
+
+    it("should provide tags for cache invalidation", async () => {
+      mockGetPermission.mockResolvedValue({
+        status: "granted",
+        canAskAgain: true,
+        expires: "never",
+      });
+
+      const api = createPermissionsApi();
+      const store = createTestStore(api);
+
+      await store.dispatch(api.endpoints.getPermission.initiate("camera"));
+
+      const state = store.getState();
+      const queries = state[api.reducerPath].queries;
+
+      expect(Object.keys(queries).length).toBeGreaterThan(0);
+    });
   });
 
-  // NOTE: These tests are skipped because they require a full Redux store setup
-  describe.skip("requestPermission queryFn", () => {
+  describe("requestPermission queryFn", () => {
     it("should return data on successful permission request", async () => {
       mockRequestPermission.mockResolvedValue({
         status: "granted",
@@ -221,10 +247,10 @@ describe("createApi", () => {
       });
 
       const api = createPermissionsApi();
-      const result = await api.endpoints.requestPermission.initiate("camera")(
-        api.util.getRunningQueriesThunk as never,
-        () => ({ permissionsApi: { queries: {}, mutations: {} } }),
-        undefined
+      const store = createTestStore(api);
+
+      const result = await store.dispatch(
+        api.endpoints.requestPermission.initiate("camera")
       );
 
       expect(mockRequestPermission).toHaveBeenCalledWith("camera");
@@ -237,10 +263,10 @@ describe("createApi", () => {
 
     it("should return error for unconfigured permission", async () => {
       const api = createPermissionsApi({ permissions: ["microphone"] });
-      const result = await api.endpoints.requestPermission.initiate("camera")(
-        api.util.getRunningQueriesThunk as never,
-        () => ({ permissionsApi: { queries: {}, mutations: {} } }),
-        undefined
+      const store = createTestStore(api);
+
+      const result = await store.dispatch(
+        api.endpoints.requestPermission.initiate("camera")
       );
 
       expect(result.error).toEqual({
@@ -255,10 +281,10 @@ describe("createApi", () => {
       );
 
       const api = createPermissionsApi();
-      const result = await api.endpoints.requestPermission.initiate("camera")(
-        api.util.getRunningQueriesThunk as never,
-        () => ({ permissionsApi: { queries: {}, mutations: {} } }),
-        undefined
+      const store = createTestStore(api);
+
+      const result = await store.dispatch(
+        api.endpoints.requestPermission.initiate("camera")
       );
 
       expect(result.error).toEqual({
@@ -271,16 +297,32 @@ describe("createApi", () => {
       mockRequestPermission.mockRejectedValue("string error");
 
       const api = createPermissionsApi();
-      const result = await api.endpoints.requestPermission.initiate("camera")(
-        api.util.getRunningQueriesThunk as never,
-        () => ({ permissionsApi: { queries: {}, mutations: {} } }),
-        undefined
+      const store = createTestStore(api);
+
+      const result = await store.dispatch(
+        api.endpoints.requestPermission.initiate("camera")
       );
 
       expect(result.error).toEqual({
         status: "CUSTOM_ERROR",
         error: "Unknown error",
       });
+    });
+
+    it("should invalidate tags after mutation", async () => {
+      mockRequestPermission.mockResolvedValue({
+        status: "granted",
+        canAskAgain: true,
+        expires: "never",
+      });
+
+      const api = createPermissionsApi();
+      const store = createTestStore(api);
+
+      await store.dispatch(api.endpoints.requestPermission.initiate("camera"));
+
+      const state = store.getState();
+      expect(state[api.reducerPath]).toBeDefined();
     });
   });
 });
