@@ -28,7 +28,8 @@
     "knip": "knip",
     "test": "jest --passWithNoTests",
     "prepare": "husky",
-    "prepublishOnly": "pnpm run build"
+    "prepublishOnly": "pnpm run build",
+    "release": "release-it"
   },
   "keywords": [
     "expo",
@@ -73,6 +74,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^19.0.0",
+    "@release-it/conventional-changelog": "^10.0.0",
     "@commitlint/config-conventional": "^19.0.0",
     "@eslint/js": "^9.0.0",
     "@reduxjs/toolkit": "^2.0.0",
@@ -95,6 +97,7 @@
     "react": "^18.2.0",
     "react-native": "^0.76.0",
     "react-redux": "^9.0.0",
+    "release-it": "^19.0.0",
     "tsup": "^8.0.0",
     "typescript": "^5.3.0",
     "typescript-eslint": "^8.0.0"

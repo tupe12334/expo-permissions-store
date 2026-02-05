@@ -2,23 +2,28 @@
   "version": "0.2",
   "language": "en",
   "words": [
-    "expo",
-    "tsup",
-    "rtk",
-    "reduxjs",
+    "centy",
     "commitlint",
-    "lintstagedrc",
-    "knip",
     "esmoduleinterop",
+    "expo",
+    "infile",
+    "knip",
+    "lintstagedrc",
     "noEmit",
+    "prepublish",
+    "reduxjs",
+    "rtk",
+    "tsup",
     "typecheck",
-    "prepublish"
+    "uuidgen",
+    "worktree"
   ],
   "ignorePaths": [
     "node_modules",
     "dist",
     "coverage",
     "pnpm-lock.yaml",
-    "*.lock"
+    "*.lock",
+    "CHANGELOG.md"
   ]
 }
