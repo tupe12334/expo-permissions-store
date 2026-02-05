@@ -84,7 +84,7 @@
     "expo-camera": "^16.1.11",
     "expo-contacts": "^14.2.6",
     "expo-location": "^18.1.6",
-    "expo-media-library": "^17.1.7",
+    "expo-media-library": "^18.2.1",
     "expo-notifications": "^0.29.14",
     "expo-tracking-transparency": "^5.2.4",
     "husky": "^9.0.0",
