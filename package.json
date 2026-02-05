@@ -83,6 +83,7 @@
     "@vitest/coverage-v8": "^4.0.18",
     "cspell": "^8.0.0",
     "eslint": "^9.0.0",
+    "eslint-config-agent": "^1.9.3",
     "eslint-config-prettier": "^9.0.0",
     "expo-calendar": "^14.1.4",
     "expo-camera": "^16.1.11",
