@@ -1,6 +1,6 @@
 {
   "name": "expo-permissions-store",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Redux Toolkit (RTK Query) store for managing Expo permissions",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -26,7 +26,8 @@
     "typecheck": "tsc --noEmit",
     "spell": "cspell \"**/*\"",
     "knip": "knip",
-    "test": "jest --passWithNoTests",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "prepare": "husky",
     "prepublishOnly": "pnpm run build",
     "release": "release-it"
@@ -74,11 +75,12 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^19.0.0",
-    "@release-it/conventional-changelog": "^10.0.0",
     "@commitlint/config-conventional": "^19.0.0",
     "@eslint/js": "^9.0.0",
     "@reduxjs/toolkit": "^2.0.0",
+    "@release-it/conventional-changelog": "^10.0.0",
     "@types/react": "^18.2.0",
+    "@vitest/coverage-v8": "^4.0.18",
     "cspell": "^8.0.0",
     "eslint": "^9.0.0",
     "eslint-config-prettier": "^9.0.0",
@@ -100,7 +102,8 @@
     "release-it": "^19.0.0",
     "tsup": "^8.0.0",
     "typescript": "^5.3.0",
-    "typescript-eslint": "^8.0.0"
+    "typescript-eslint": "^8.0.0",
+    "vitest": "^4.0.18"
   },
   "packageManager": "pnpm@10.28.0"
 }
