@@ -30,8 +30,12 @@ npm install @reduxjs/toolkit react-redux expo-camera expo-media-library expo-loc
 ### Option 1: Use the Built-in Store
 
 ```tsx
-import { Provider } from 'react-redux';
-import { store, useGetPermissionQuery, useRequestPermissionMutation } from 'expo-permissions-store';
+import { Provider } from "react-redux";
+import {
+  store,
+  useGetPermissionQuery,
+  useRequestPermissionMutation,
+} from "expo-permissions-store";
 
 function App() {
   return (
@@ -42,16 +46,16 @@ function App() {
 }
 
 function MyComponent() {
-  const { data: cameraPermission, isLoading } = useGetPermissionQuery('camera');
+  const { data: cameraPermission, isLoading } = useGetPermissionQuery("camera");
   const [requestPermission] = useRequestPermissionMutation();
 
   if (isLoading) return <Text>Checking permission...</Text>;
 
-  if (cameraPermission?.status !== 'granted') {
+  if (cameraPermission?.status !== "granted") {
     return (
       <Button
         title="Grant Camera Access"
-        onPress={() => requestPermission('camera')}
+        onPress={() => requestPermission("camera")}
       />
     );
   }
@@ -63,8 +67,8 @@ function MyComponent() {
 ### Option 2: Integrate into Your Store
 
 ```typescript
-import { configureStore } from '@reduxjs/toolkit';
-import { permissionsApi } from 'expo-permissions-store';
+import { configureStore } from "@reduxjs/toolkit";
+import { permissionsApi } from "expo-permissions-store";
 
 const store = configureStore({
   reducer: {
@@ -79,11 +83,11 @@ const store = configureStore({
 ### Option 3: Custom Configuration
 
 ```typescript
-import { createPermissionsApi } from 'expo-permissions-store';
+import { createPermissionsApi } from "expo-permissions-store";
 
 const customPermissionsApi = createPermissionsApi({
   // Only include permissions you need
-  permissions: ['camera', 'microphone', 'mediaLibrary'],
+  permissions: ["camera", "microphone", "mediaLibrary"],
 
   // Disable foreground re-check
   recheckOnForeground: false,
@@ -108,10 +112,11 @@ const store = configureStore({
 Check the current status of a permission.
 
 ```typescript
-const { data, isLoading, error, refetch } = useGetPermissionQuery('camera');
+const { data, isLoading, error, refetch } = useGetPermissionQuery("camera");
 ```
 
 Returns:
+
 ```typescript
 {
   data: {
@@ -130,25 +135,26 @@ Returns:
 Request a permission from the user.
 
 ```typescript
-const [requestPermission, { isLoading, data, error }] = useRequestPermissionMutation();
+const [requestPermission, { isLoading, data, error }] =
+  useRequestPermissionMutation();
 
 // Trigger request
-await requestPermission('camera');
+await requestPermission("camera");
 ```
 
 ### Permission Types
 
 ```typescript
 type PermissionType =
-  | 'camera'
-  | 'microphone'
-  | 'mediaLibrary'
-  | 'locationForeground'
-  | 'locationBackground'
-  | 'notifications'
-  | 'contacts'
-  | 'calendar'
-  | 'tracking'; // iOS only
+  | "camera"
+  | "microphone"
+  | "mediaLibrary"
+  | "locationForeground"
+  | "locationBackground"
+  | "notifications"
+  | "contacts"
+  | "calendar"
+  | "tracking"; // iOS only
 ```
 
 ### Configuration Options
@@ -175,26 +181,26 @@ interface PermissionsConfig {
 
 ## Exports
 
-| Export | Description |
-|--------|-------------|
-| `store` | Pre-configured Redux store |
-| `permissionsApi` | RTK Query API slice with default config |
-| `createPermissionsApi` | Factory function for custom configuration |
-| `useGetPermissionQuery` | Hook to check permission status |
-| `useRequestPermissionMutation` | Hook to request permission |
-| `PermissionType` | Union type of all permission names |
-| `PermissionState` | Type for permission state object |
-| `PermissionsConfig` | Type for configuration options |
+| Export                         | Description                               |
+| ------------------------------ | ----------------------------------------- |
+| `store`                        | Pre-configured Redux store                |
+| `permissionsApi`               | RTK Query API slice with default config   |
+| `createPermissionsApi`         | Factory function for custom configuration |
+| `useGetPermissionQuery`        | Hook to check permission status           |
+| `useRequestPermissionMutation` | Hook to request permission                |
+| `PermissionType`               | Union type of all permission names        |
+| `PermissionState`              | Type for permission state object          |
+| `PermissionsConfig`            | Type for configuration options            |
 
 ## Permission State
 
 Each permission returns a detailed state object:
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `status` | `'undetermined' \| 'granted' \| 'denied' \| 'limited'` | Current permission status |
-| `canAskAgain` | `boolean` | Whether the app can prompt the user again |
-| `expires` | `'never' \| number` | When the permission expires |
+| Property      | Type                                                   | Description                               |
+| ------------- | ------------------------------------------------------ | ----------------------------------------- |
+| `status`      | `'undetermined' \| 'granted' \| 'denied' \| 'limited'` | Current permission status                 |
+| `canAskAgain` | `boolean`                                              | Whether the app can prompt the user again |
+| `expires`     | `'never' \| number`                                    | When the permission expires               |
 
 ## Platform Notes
 
