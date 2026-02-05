@@ -86,7 +86,7 @@
     "eslint-config-agent": "^1.9.3",
     "eslint-config-prettier": "^9.0.0",
     "expo-calendar": "^14.1.4",
-    "expo-camera": "^16.1.11",
+    "expo-camera": "^17.0.10",
     "expo-contacts": "^14.2.6",
     "expo-location": "^18.1.6",
     "expo-media-library": "^17.1.7",
