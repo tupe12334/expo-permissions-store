@@ -87,7 +87,7 @@
     "eslint-config-prettier": "^9.0.0",
     "expo-calendar": "^14.1.4",
     "expo-camera": "^16.1.11",
-    "expo-contacts": "^14.2.6",
+    "expo-contacts": "^15.0.11",
     "expo-location": "^18.1.6",
     "expo-media-library": "^17.1.7",
     "expo-notifications": "^0.29.14",
