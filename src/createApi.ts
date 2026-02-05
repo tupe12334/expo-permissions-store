@@ -26,17 +26,16 @@ export function createPermissionsApi(config: PermissionsConfig = {}) {
             };
           }
 
-          try {
-            const data = await getPermission(permissionType);
-            return { data };
-          } catch (error) {
+          const result = await getPermission(permissionType);
+          if (result.error) {
             return {
               error: {
                 status: "CUSTOM_ERROR",
-                error: error instanceof Error ? error.message : "Unknown error",
+                error: result.error,
               },
             };
           }
+          return { data: result.data };
         },
         providesTags: (_, __, permissionType) => [
           { type: "Permission", id: permissionType },
@@ -55,17 +54,16 @@ export function createPermissionsApi(config: PermissionsConfig = {}) {
             };
           }
 
-          try {
-            const data = await requestPermission(permissionType);
-            return { data };
-          } catch (error) {
+          const result = await requestPermission(permissionType);
+          if (result.error) {
             return {
               error: {
                 status: "CUSTOM_ERROR",
-                error: error instanceof Error ? error.message : "Unknown error",
+                error: result.error,
               },
             };
           }
+          return { data: result.data };
         },
         invalidatesTags: (_, __, permissionType) => [
           { type: "Permission", id: permissionType },

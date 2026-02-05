@@ -7,6 +7,10 @@ export type PermissionResponse = {
   granted?: boolean;
 };
 
+export type Result<T> =
+  | { data: T; error: undefined }
+  | { data: undefined; error: string };
+
 export function normalizeResponse(
   response: PermissionResponse
 ): PermissionState {
@@ -22,218 +26,198 @@ export function normalizeResponse(
 }
 
 // Use require() for Metro bundler compatibility - Metro cannot analyze dynamic import()
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function safeRequire(id: string): any {
-  try {
-    /* eslint-disable @typescript-eslint/no-require-imports */
-    switch (id) {
-      case "expo-camera":
-        return require("expo-camera");
-      case "expo-media-library":
-        return require("expo-media-library");
-      case "expo-location":
-        return require("expo-location");
-      case "expo-notifications":
-        return require("expo-notifications");
-      case "expo-contacts":
-        return require("expo-contacts");
-      case "expo-calendar":
-        return require("expo-calendar");
-      case "expo-tracking-transparency":
-        return require("expo-tracking-transparency");
-      default:
-        return null;
-    }
-    /* eslint-enable @typescript-eslint/no-require-imports */
-  } catch {
-    return null;
+function safeRequire<T>(id: string): Result<T> {
+  /* eslint-disable @typescript-eslint/no-require-imports */
+  switch (id) {
+    case "expo-camera":
+      return { data: require("expo-camera"), error: undefined };
+    case "expo-media-library":
+      return { data: require("expo-media-library"), error: undefined };
+    case "expo-location":
+      return { data: require("expo-location"), error: undefined };
+    case "expo-notifications":
+      return { data: require("expo-notifications"), error: undefined };
+    case "expo-contacts":
+      return { data: require("expo-contacts"), error: undefined };
+    case "expo-calendar":
+      return { data: require("expo-calendar"), error: undefined };
+    case "expo-tracking-transparency":
+      return { data: require("expo-tracking-transparency"), error: undefined };
+    default:
+      return { data: undefined, error: `Unknown module: ${id}` };
   }
+  /* eslint-enable @typescript-eslint/no-require-imports */
 }
 
 export async function getPermission(
   type: PermissionType
-): Promise<PermissionState> {
+): Promise<Result<PermissionState>> {
   switch (type) {
     case "camera": {
-      const Camera = safeRequire("expo-camera") as
-        | typeof import("expo-camera")
-        | null;
-      if (!Camera) throw new Error("expo-camera is not installed");
-      const response = await Camera.Camera.getCameraPermissionsAsync();
-      return normalizeResponse(response);
+      const result = safeRequire<typeof import("expo-camera")>("expo-camera");
+      if (result.error) return { data: undefined, error: result.error };
+      const response = await result.data!.Camera.getCameraPermissionsAsync();
+      return { data: normalizeResponse(response), error: undefined };
     }
 
     case "microphone": {
-      const Camera = safeRequire("expo-camera") as
-        | typeof import("expo-camera")
-        | null;
-      if (!Camera) throw new Error("expo-camera is not installed");
-      const response = await Camera.Camera.getMicrophonePermissionsAsync();
-      return normalizeResponse(response);
+      const result = safeRequire<typeof import("expo-camera")>("expo-camera");
+      if (result.error) return { data: undefined, error: result.error };
+      const response =
+        await result.data!.Camera.getMicrophonePermissionsAsync();
+      return { data: normalizeResponse(response), error: undefined };
     }
 
     case "mediaLibrary": {
-      const MediaLibrary = safeRequire("expo-media-library") as
-        | typeof import("expo-media-library")
-        | null;
-      if (!MediaLibrary) throw new Error("expo-media-library is not installed");
-      const response = await MediaLibrary.getPermissionsAsync();
-      return normalizeResponse(response);
+      const result =
+        safeRequire<typeof import("expo-media-library")>("expo-media-library");
+      if (result.error) return { data: undefined, error: result.error };
+      const response = await result.data!.getPermissionsAsync();
+      return { data: normalizeResponse(response), error: undefined };
     }
 
     case "locationForeground": {
-      const Location = safeRequire("expo-location") as
-        | typeof import("expo-location")
-        | null;
-      if (!Location) throw new Error("expo-location is not installed");
-      const response = await Location.getForegroundPermissionsAsync();
-      return normalizeResponse(response);
+      const result =
+        safeRequire<typeof import("expo-location")>("expo-location");
+      if (result.error) return { data: undefined, error: result.error };
+      const response = await result.data!.getForegroundPermissionsAsync();
+      return { data: normalizeResponse(response), error: undefined };
     }
 
     case "locationBackground": {
-      const Location = safeRequire("expo-location") as
-        | typeof import("expo-location")
-        | null;
-      if (!Location) throw new Error("expo-location is not installed");
-      const response = await Location.getBackgroundPermissionsAsync();
-      return normalizeResponse(response);
+      const result =
+        safeRequire<typeof import("expo-location")>("expo-location");
+      if (result.error) return { data: undefined, error: result.error };
+      const response = await result.data!.getBackgroundPermissionsAsync();
+      return { data: normalizeResponse(response), error: undefined };
     }
 
     case "notifications": {
-      const Notifications = safeRequire("expo-notifications") as
-        | typeof import("expo-notifications")
-        | null;
-      if (!Notifications)
-        throw new Error("expo-notifications is not installed");
-      const response = await Notifications.getPermissionsAsync();
-      return normalizeResponse(response);
+      const result =
+        safeRequire<typeof import("expo-notifications")>("expo-notifications");
+      if (result.error) return { data: undefined, error: result.error };
+      const response = await result.data!.getPermissionsAsync();
+      return { data: normalizeResponse(response), error: undefined };
     }
 
     case "contacts": {
-      const Contacts = safeRequire("expo-contacts") as
-        | typeof import("expo-contacts")
-        | null;
-      if (!Contacts) throw new Error("expo-contacts is not installed");
-      const response = await Contacts.getPermissionsAsync();
-      return normalizeResponse(response);
+      const result =
+        safeRequire<typeof import("expo-contacts")>("expo-contacts");
+      if (result.error) return { data: undefined, error: result.error };
+      const response = await result.data!.getPermissionsAsync();
+      return { data: normalizeResponse(response), error: undefined };
     }
 
     case "calendar": {
-      const Calendar = safeRequire("expo-calendar") as
-        | typeof import("expo-calendar")
-        | null;
-      if (!Calendar) throw new Error("expo-calendar is not installed");
-      const response = await Calendar.getCalendarPermissionsAsync();
-      return normalizeResponse(response);
+      const result =
+        safeRequire<typeof import("expo-calendar")>("expo-calendar");
+      if (result.error) return { data: undefined, error: result.error };
+      const response = await result.data!.getCalendarPermissionsAsync();
+      return { data: normalizeResponse(response), error: undefined };
     }
 
     case "tracking": {
-      const Tracking = safeRequire("expo-tracking-transparency") as
-        | typeof import("expo-tracking-transparency")
-        | null;
-      if (!Tracking)
-        throw new Error("expo-tracking-transparency is not installed");
-      const response = await Tracking.getTrackingPermissionsAsync();
-      return normalizeResponse(response);
+      const result = safeRequire<typeof import("expo-tracking-transparency")>(
+        "expo-tracking-transparency"
+      );
+      if (result.error) return { data: undefined, error: result.error };
+      const response = await result.data!.getTrackingPermissionsAsync();
+      return { data: normalizeResponse(response), error: undefined };
     }
 
     default: {
       const _exhaustive: never = type;
-      throw new Error(`Unknown permission type: ${_exhaustive}`);
+      return {
+        data: undefined,
+        error: `Unknown permission type: ${_exhaustive}`,
+      };
     }
   }
 }
 
 export async function requestPermission(
   type: PermissionType
-): Promise<PermissionState> {
+): Promise<Result<PermissionState>> {
   switch (type) {
     case "camera": {
-      const Camera = safeRequire("expo-camera") as
-        | typeof import("expo-camera")
-        | null;
-      if (!Camera) throw new Error("expo-camera is not installed");
-      const response = await Camera.Camera.requestCameraPermissionsAsync();
-      return normalizeResponse(response);
+      const result = safeRequire<typeof import("expo-camera")>("expo-camera");
+      if (result.error) return { data: undefined, error: result.error };
+      const response =
+        await result.data!.Camera.requestCameraPermissionsAsync();
+      return { data: normalizeResponse(response), error: undefined };
     }
 
     case "microphone": {
-      const Camera = safeRequire("expo-camera") as
-        | typeof import("expo-camera")
-        | null;
-      if (!Camera) throw new Error("expo-camera is not installed");
-      const response = await Camera.Camera.requestMicrophonePermissionsAsync();
-      return normalizeResponse(response);
+      const result = safeRequire<typeof import("expo-camera")>("expo-camera");
+      if (result.error) return { data: undefined, error: result.error };
+      const response =
+        await result.data!.Camera.requestMicrophonePermissionsAsync();
+      return { data: normalizeResponse(response), error: undefined };
     }
 
     case "mediaLibrary": {
-      const MediaLibrary = safeRequire("expo-media-library") as
-        | typeof import("expo-media-library")
-        | null;
-      if (!MediaLibrary) throw new Error("expo-media-library is not installed");
-      const response = await MediaLibrary.requestPermissionsAsync();
-      return normalizeResponse(response);
+      const result =
+        safeRequire<typeof import("expo-media-library")>("expo-media-library");
+      if (result.error) return { data: undefined, error: result.error };
+      const response = await result.data!.requestPermissionsAsync();
+      return { data: normalizeResponse(response), error: undefined };
     }
 
     case "locationForeground": {
-      const Location = safeRequire("expo-location") as
-        | typeof import("expo-location")
-        | null;
-      if (!Location) throw new Error("expo-location is not installed");
-      const response = await Location.requestForegroundPermissionsAsync();
-      return normalizeResponse(response);
+      const result =
+        safeRequire<typeof import("expo-location")>("expo-location");
+      if (result.error) return { data: undefined, error: result.error };
+      const response = await result.data!.requestForegroundPermissionsAsync();
+      return { data: normalizeResponse(response), error: undefined };
     }
 
     case "locationBackground": {
-      const Location = safeRequire("expo-location") as
-        | typeof import("expo-location")
-        | null;
-      if (!Location) throw new Error("expo-location is not installed");
-      const response = await Location.requestBackgroundPermissionsAsync();
-      return normalizeResponse(response);
+      const result =
+        safeRequire<typeof import("expo-location")>("expo-location");
+      if (result.error) return { data: undefined, error: result.error };
+      const response = await result.data!.requestBackgroundPermissionsAsync();
+      return { data: normalizeResponse(response), error: undefined };
     }
 
     case "notifications": {
-      const Notifications = safeRequire("expo-notifications") as
-        | typeof import("expo-notifications")
-        | null;
-      if (!Notifications)
-        throw new Error("expo-notifications is not installed");
-      const response = await Notifications.requestPermissionsAsync();
-      return normalizeResponse(response);
+      const result =
+        safeRequire<typeof import("expo-notifications")>("expo-notifications");
+      if (result.error) return { data: undefined, error: result.error };
+      const response = await result.data!.requestPermissionsAsync();
+      return { data: normalizeResponse(response), error: undefined };
     }
 
     case "contacts": {
-      const Contacts = safeRequire("expo-contacts") as
-        | typeof import("expo-contacts")
-        | null;
-      if (!Contacts) throw new Error("expo-contacts is not installed");
-      const response = await Contacts.requestPermissionsAsync();
-      return normalizeResponse(response);
+      const result =
+        safeRequire<typeof import("expo-contacts")>("expo-contacts");
+      if (result.error) return { data: undefined, error: result.error };
+      const response = await result.data!.requestPermissionsAsync();
+      return { data: normalizeResponse(response), error: undefined };
     }
 
     case "calendar": {
-      const Calendar = safeRequire("expo-calendar") as
-        | typeof import("expo-calendar")
-        | null;
-      if (!Calendar) throw new Error("expo-calendar is not installed");
-      const response = await Calendar.requestCalendarPermissionsAsync();
-      return normalizeResponse(response);
+      const result =
+        safeRequire<typeof import("expo-calendar")>("expo-calendar");
+      if (result.error) return { data: undefined, error: result.error };
+      const response = await result.data!.requestCalendarPermissionsAsync();
+      return { data: normalizeResponse(response), error: undefined };
     }
 
     case "tracking": {
-      const Tracking = safeRequire("expo-tracking-transparency") as
-        | typeof import("expo-tracking-transparency")
-        | null;
-      if (!Tracking)
-        throw new Error("expo-tracking-transparency is not installed");
-      const response = await Tracking.requestTrackingPermissionsAsync();
-      return normalizeResponse(response);
+      const result = safeRequire<typeof import("expo-tracking-transparency")>(
+        "expo-tracking-transparency"
+      );
+      if (result.error) return { data: undefined, error: result.error };
+      const response = await result.data!.requestTrackingPermissionsAsync();
+      return { data: normalizeResponse(response), error: undefined };
     }
 
     default: {
       const _exhaustive: never = type;
-      throw new Error(`Unknown permission type: ${_exhaustive}`);
+      return {
+        data: undefined,
+        error: `Unknown permission type: ${_exhaustive}`,
+      };
     }
   }
 }

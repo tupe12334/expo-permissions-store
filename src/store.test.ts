@@ -4,8 +4,14 @@ import { store, type RootState, type AppDispatch } from "./store";
 import { permissionsApi } from "./api";
 
 vi.mock("./permissions/handlers", () => ({
-  getPermission: vi.fn(),
-  requestPermission: vi.fn(),
+  getPermission: vi.fn().mockResolvedValue({
+    data: { status: "granted", canAskAgain: true, expires: "never" },
+    error: undefined,
+  }),
+  requestPermission: vi.fn().mockResolvedValue({
+    data: { status: "granted", canAskAgain: true, expires: "never" },
+    error: undefined,
+  }),
 }));
 
 describe("store", () => {
