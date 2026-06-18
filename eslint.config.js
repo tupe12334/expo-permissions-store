@@ -4,6 +4,9 @@ export default [
   ...eslintConfigAgent,
   {
     rules: {
+      // Published library code must not ship stray debug logging.
+      // Consumers own reporting; the package should stay silent at runtime.
+      "no-console": "error",
       // Library exports multiple types/functions from single files
       "single-export/single-export": "off",
       // Don't require spec files for library code
