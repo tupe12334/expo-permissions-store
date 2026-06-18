@@ -208,6 +208,10 @@ Each permission returns a detailed state object:
 - `locationBackground` requires `locationForeground` to be granted first.
 - `limited` status is iOS 14+ only (for photos).
 
+## Contributing
+
+Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md) before submitting a PR.
+
 ## License
 
-MIT
+[MIT](LICENSE)

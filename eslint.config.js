@@ -1,27 +1,33 @@
-import js from "@eslint/js";
-import tseslint from "typescript-eslint";
-import prettier from "eslint-config-prettier";
+import eslintConfigAgent from "eslint-config-agent";
 
-export default tseslint.config(
-  js.configs.recommended,
-  ...tseslint.configs.recommended,
-  prettier,
+export default [
+  ...eslintConfigAgent,
   {
-    languageOptions: {
-      parserOptions: {
-        project: "./tsconfig.json",
-      },
-    },
     rules: {
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        { argsIgnorePattern: "^_" },
-      ],
-      "@typescript-eslint/explicit-function-return-type": "off",
-      "@typescript-eslint/no-explicit-any": "warn",
+      // Library exports multiple types/functions from single files
+      "single-export/single-export": "off",
+      // Don't require spec files for library code
+      "ddd/require-spec-file": "off",
+      // Allow type assertions for dynamic module loading
+      "no-restricted-syntax": "off",
+      // Allow generic errors for module-not-installed scenarios
+      "error/no-generic-error": "off",
+      "error/require-custom-error": "off",
+      "error/no-literal-error-message": "off",
+      // Allow default parameters
+      "default/no-default-params": "off",
+      // Disable import/order due to resolver issues with TypeScript
+      "import/order": "off",
+      // Allow type aliases (not just interfaces)
+      "@typescript-eslint/consistent-type-definitions": "off",
+      // Library handlers can be longer than typical functions
+      "max-lines-per-function": "off",
+      "max-lines": "off",
     },
   },
   {
-    ignores: ["dist/**", "node_modules/**", "*.config.*"],
-  }
-);
+    // Test files have relaxed rules
+    files: ["**/*.test.ts", "**/*.spec.ts"],
+    rules: {},
+  },
+];
