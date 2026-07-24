@@ -12,6 +12,8 @@ export default [
   ...eslintConfigAgent,
   {
     rules: {
+      // Require strict equality (===/!==) to avoid type-coercion bugs
+      eqeqeq: ["error", "always"],
       // Library exports multiple types/functions from single files
       "single-export/single-export": "off",
       // Don't require spec files for library code
