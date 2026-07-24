@@ -88,7 +88,7 @@
     "expo-calendar": "^14.1.4",
     "expo-camera": "^17.0.10",
     "expo-contacts": "^15.0.11",
-    "expo-location": "^18.1.6",
+    "expo-location": "^19.0.8",
     "expo-media-library": "^18.2.1",
     "expo-notifications": "^0.29.14",
     "expo-tracking-transparency": "^5.2.4",
