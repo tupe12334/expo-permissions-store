@@ -1,4 +1,5 @@
-import { createPermissionsApi, PermissionsApi } from "./createApi";
+import type { PermissionsApi } from "./createApi";
+import { createPermissionsApi } from "./createApi";
 
 /**
  * Pre-configured permissions API with default settings

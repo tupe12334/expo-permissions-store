@@ -30,6 +30,19 @@ export default [
       "import/order": "off",
       // Allow type aliases (not just interfaces)
       "@typescript-eslint/consistent-type-definitions": "off",
+      // Enforce `import type` for type-only imports. With isolatedModules +
+      // bundler resolution this guarantees correct type elision and prevents
+      // accidental runtime imports of type-only symbols.
+      // disallowTypeAnnotations stays off: inline `import("...")` type
+      // annotations are required by the optional-module `safeRequire` pattern.
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        {
+          prefer: "type-imports",
+          fixStyle: "separate-type-imports",
+          disallowTypeAnnotations: false,
+        },
+      ],
       // Library handlers can be longer than typical functions
       "max-lines-per-function": "off",
       "max-lines": "off",
