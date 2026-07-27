@@ -181,16 +181,25 @@ interface PermissionsConfig {
 
 ## Exports
 
-| Export                         | Description                               |
-| ------------------------------ | ----------------------------------------- |
-| `store`                        | Pre-configured Redux store                |
-| `permissionsApi`               | RTK Query API slice with default config   |
-| `createPermissionsApi`         | Factory function for custom configuration |
-| `useGetPermissionQuery`        | Hook to check permission status           |
-| `useRequestPermissionMutation` | Hook to request permission                |
-| `PermissionType`               | Union type of all permission names        |
-| `PermissionState`              | Type for permission state object          |
-| `PermissionsConfig`            | Type for configuration options            |
+| Export                         | Description                                                          |
+| ------------------------------ | --------------------------------------------------------------------- |
+| `store`                        | Pre-configured Redux store                                          |
+| `permissionsApi`               | RTK Query API slice with default config                             |
+| `createPermissionsApi`         | Factory function for custom configuration                           |
+| `useGetPermissionQuery`        | Hook to check permission status                                     |
+| `useLazyGetPermissionQuery`    | Lazy-query variant of `useGetPermissionQuery`                        |
+| `useRequestPermissionMutation` | Hook to request permission                                           |
+| `usePrefetch`                  | Hook to prefetch permission data ahead of render                     |
+| `setupForegroundListener`      | Invalidates the permission cache when the app returns to foreground |
+| `PermissionType`               | Union type of all permission names                                   |
+| `PermissionStatus`             | Union type of all permission status values                          |
+| `PermissionState`              | Type for permission state object                                     |
+| `PermissionsConfig`            | Type for configuration options                                       |
+| `PermissionsApi`               | Return type of `createPermissionsApi`                                |
+| `ALL_PERMISSIONS`              | Array of all supported `PermissionType` values                       |
+| `DEFAULT_CONFIG`               | Default `PermissionsConfig` used by `permissionsApi`                 |
+| `RootState`                    | Root state type of the pre-configured `store`                        |
+| `AppDispatch`                  | Dispatch type of the pre-configured `store`                          |
 
 ## Permission State
 
