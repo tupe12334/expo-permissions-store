@@ -12,6 +12,9 @@ export default [
   ...eslintConfigAgent,
   {
     rules: {
+      // Published library code must not ship stray debug logging.
+      // Consumers own reporting; the package should stay silent at runtime.
+      "no-console": "error",
       // Require strict equality (===/!==) to avoid type-coercion bugs
       eqeqeq: ["error", "always"],
       // Library exports multiple types/functions from single files
