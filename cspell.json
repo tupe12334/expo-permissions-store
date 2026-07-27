@@ -15,6 +15,7 @@
     "reduxjs",
     "rtk",
     "tsup",
+    "tupe",
     "typecheck",
     "uuidgen",
     "worktree"
