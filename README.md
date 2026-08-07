@@ -208,6 +208,10 @@ Each permission returns a detailed state object:
 - `locationBackground` requires `locationForeground` to be granted first.
 - `limited` status is iOS 14+ only (for photos).
 
+## Related Projects
+
+- [moadim](https://moadim.io/) — loop engineering: build, schedule & run agent loops.
+
 ## Contributing
 
 Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md) before submitting a PR.
